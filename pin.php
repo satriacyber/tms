@@ -2,32 +2,26 @@
 session_start();
 error_reporting (0);
 ob_start("ob_gzhandler");
-include ('function.php') ;
-$idm = $_COOKIE['idm'];
-if(isset($idm)) {echo "<script>window.location='home.php'</script>";}
+include ('fungsi.php') ;
+$token = $_COOKIE['token'];
+if(isset($token)) {echo "<script>window.location='home.php'</script>";}
 
 if ((isset($_POST['kirim'])) AND ($_POST['nohp'] <> "")) {
     $nohp = $_POST['nohp'];
     if ($nohp == null) {
-        $_COOKIE['pesan'] = "NOMOR HP/WA KOSONG !!!";
+        $_COOKIE['pesan'] = "NOMOR HP/WA Salah !!!";
     } else {
-        $modem = '15';
         $nohp = hp62($nohp);
-        $pin = random(4);
-        $msg = "Assalamualaikum. \nHati - Hati Penipuan/Pembajakan PIN kamu sangat rahasia tidak boleh di berikan kpd siapapun dg alasan apapun termasuk kpd pihak yg mengaku dari TMS/KOCI. WASPADALAH !!!\n\nPIN Kamu : ".$pin."\n\n*Terima Kasih";
-        $kirim = json_decode(sendwa($nohp,$msg), true);
-        if ($kirim['status'] == true) {
-            $data = 'setpin$$$'.$nohp.'$$$'.$pin ;
-            $reply = sendapi($data);
-            $_COOKIE['pesan'] = "PIN SUKSES Terkirim !!!";
-        } else {
-            $_COOKIE['pesan'] = "NOMOR SALAH !!!</b>";
-        }
+        $data = array(
+            'api' => 'setpin',
+            'nohp' => $nohp
+        );
+        $kirim = sendapi($data);
+        $_COOKIE['pesan'] = "PIN SUKSES Terkirim !!!";
     }
 }
-echo $reply ;
 ?>
-<title>KOCI Mobile</title>
+<title>TMS Corporation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=">
 <meta name="viewport" content="width=device-width; minimum-scale=0.5; initial-scale=1; maximum-scale=2; user-scalable=yes;" />
 <link rel="shortcut icon" type="image/x-icon" href="style/img/logo.png">

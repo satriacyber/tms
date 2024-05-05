@@ -1,27 +1,31 @@
 <?php
 session_start();
 error_reporting (0);
-include ('function.php') ;
-$idm = $_COOKIE['idm'];
-if(isset($idm)) {echo "<script>window.location='home.php'</script>";}
+include ('fungsi.php') ;
+$token = $_COOKIE['token'];
+if(isset($token)) {echo "<script>window.location='home.php'</script>";}
 
 if ((isset($_POST['submit'])) AND ($_POST['username'] <> "") AND ($_POST['password'] <> "")) {
-$un = $_POST['username'];
-$pw = $_POST['password'];
-$data = 'login$$$'.$un.'$$$'.$pw ;
+$un = trim($_POST['username']);
+$pw = trim($_POST['password']);
+$data = array(
+    'api' => 'login',
+    'un' => $un,
+    'pw' => $pw
+);
 $reply = sendapi($data);
+$reply = str_replace("\"","",$reply);
 if($reply == '0'){$_SESSION['pesan'] = "USERNAME SALAH !!!" ;}
 else if($reply == '1'){$_SESSION['pesan'] = "PASSWORD SALAH !!!" ;}
 else if(strlen($reply) != 32){$_SESSION['pesan'] = "TOKEN SALAH !!!" ;}
 else {
         setcookie('token', $reply, strtotime('+1 year'), '/');
-        setcookie('idm', $un, strtotime('+1 year'), '/');
         echo "<script>window.location='home.php';</script>";
     }
 }
 ?>
 
-<title>KOCI Mobile</title>
+<title>TMS Corporation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=">
 <meta name="viewport" content="width=device-width; minimum-scale=0.5; initial-scale=1; maximum-scale=2; user-scalable=yes;" />
 <link rel="shortcut icon" type="image/x-icon" href="style/img/logo.png">
@@ -73,17 +77,7 @@ body {
       <td align="right"><input name="submit" type="submit" id="Submit" value="MASUK" class="tombol tombol2"></td>
     </tr>
     <tr>
-      <td colspan="2" align="center" nowrap class="judul2"><hr><br>
-      <a href="koci.apk">
-        	      <button type="button" style="
-                		font-size: 15px;
-                		font-family: roboto;
-                		border: 1px solid #FFFFFF;
-                		background-color: rgba(255, 255, 255, 0);
-                		color: #ffffff;"><b>DOWNLOAD<br>APLIKASI</b>
-        		    </button>	
-		    </a>
-      </td>
+      <td colspan="2" align="center" nowrap class="judul2"><hr></td>
     </tr>
   </table>
   <div align="center" class="footer style6"><strong>tms.kotaciamis.com</strong></div>

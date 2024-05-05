@@ -1,17 +1,13 @@
 <?php
-function sendapi($data){
+function sendapi($api){
+    $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $ips = $_SERVER['REMOTE_ADDR'];
     $sis = $_SERVER['HTTP_USER_AGENT'];
-    $data = $data.'$$$'.$ips.'$$$'.$sis ;
-    $keycode = encrypt($data);
-    $reply = @file_get_contents("http://app.tms.web.id/server/api.php?keycode=".$keycode);
-    $reply = decrypt($reply) ;
-    return $reply ;
-}
-
-function sendapis($api){
     $token = $_COOKIE['token'];
     $data = array(
+        'url' => $url,
+        'ips' => $ips,
+        'sis' => $sis,
         'token' => $token
     );
 
@@ -20,66 +16,25 @@ function sendapis($api){
     } else {
         $data['api'] = $api;
     }
-    $url = 'http://app.tms.web.id/server/apis.php';
-    $ch = curl_init($url);
+    
+    $data = json_encode($data);
+    $data = encrypt($data);
+    $server = 'http://app.tms.web.id/server/apis.php';
+    $ch = curl_init($server);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
         'Authorization: '.$token
     ));
     $response = curl_exec($ch);
-    if ($response === false) {return 0;} else {return $response;}
+    if ($response === false) {return 0;} 
+    else {
+        $response = decrypt($response);
+        return $response;
+    }
     curl_close($ch);
-}
-
-function sendkc($token, $idm, $msg)
-{
-	$url = 'http://app.tms.web.id/server/kc.php';
-	$ips = $_SERVER['REMOTE_ADDR'];
-    $sis = $_SERVER['HTTP_USER_AGENT'];
-	$data = array(
-        'modem' => '14',
-        'token' => $token,
-        'idm' => $idm,
-        'text' => $msg,
-        'ips' => $ips,
-        'sis' => $sis
-    );
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    curl_close($ch);
-	$reply = json_decode($response, true);
-	$reply = str_replace("\n","<br>",$reply) ;
-	return $reply ;
-}
-
-function sendwa($target, $pesan){
-    $curl = curl_init();
-    $data = [
-        'target' => $target,
-        'message' => $pesan
-    ];
-    
-    curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array(
-            "Authorization: v2fYKaxfdUA-63WMTNQV",
-        )
-    );
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_setopt($curl, CURLOPT_URL, "https://api.fonnte.com/send");
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-    $result = curl_exec($curl);
-    curl_close($curl);
-    return $result;
 }
 
 function encrypt($str) {
