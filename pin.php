@@ -79,5 +79,5 @@ body {
   </table>
   <table  border="0" align="center">
 </form>
-<div align="center" class="style6"><strong>koci.kotaciamis.com</strong>
+<div align="center" class="style6"><strong>tms.kotaciamis.com</strong>
 </div>

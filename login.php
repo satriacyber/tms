@@ -86,7 +86,7 @@ body {
       </td>
     </tr>
   </table>
-  <div align="center" class="footer style6"><strong>koci.kotaciamis.com</strong></div>
+  <div align="center" class="footer style6"><strong>tms.kotaciamis.com</strong></div>
   </form>
 </div>
 
