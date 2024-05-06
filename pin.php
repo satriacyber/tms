@@ -25,7 +25,7 @@ if ((isset($_POST['kirim'])) AND ($_POST['nohp'] <> "")) {
 <meta http-equiv="Content-Type" content="text/html; charset=">
 <meta name="viewport" content="width=device-width; minimum-scale=0.5; initial-scale=1; maximum-scale=2; user-scalable=yes;" />
 <link rel="shortcut icon" type="image/x-icon" href="style/img/logo.png">
-<link rel="stylesheet"type="text/css"href="style/css/style_tms.css"/>
+<link rel="stylesheet"type="text/css"href="style/css/style.css"/>
 <style type="text/css">
 <!--
 .style1 {color: #FF0000}

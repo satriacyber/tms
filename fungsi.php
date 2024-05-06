@@ -1,4 +1,6 @@
 <?php
+$auth = "TMS";
+
 function sendapi($api){
     $url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $ips = $_SERVER['REMOTE_ADDR'];
@@ -26,7 +28,7 @@ function sendapi($api){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
-        'Authorization: '.$token
+        'Authorization: '.$_GLOBALS['auth']
     ));
     $response = curl_exec($ch);
     if ($response === false) {return 0;} 
